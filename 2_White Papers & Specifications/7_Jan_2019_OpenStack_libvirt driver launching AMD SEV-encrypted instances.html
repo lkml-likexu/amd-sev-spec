@@ -1,0 +1,1207 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>libvirt driver launching AMD SEV-encrypted instances &#8212; Nova Specs  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/basic.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Count quota usage from placement" href="count-quota-usage-from-placement.html" />
+    <link rel="prev" title="Add support for emulated virtual TPM" href="add-emulated-virtual-tpm.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bootstrap CSS -->
+<link href="../../../_static/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Fonts -->
+<link href="../../../_static/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="../../../_static/css/combined.css" rel="stylesheet">
+
+<!-- Search CSS -->
+<link href="../../../_static/css/search.css" rel="stylesheet">
+
+<!-- Pygments CSS -->
+<link href="../../../_static/pygments.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-17511903-1', 'auto');
+ga('send', 'pageview');
+</script>
+<!-- End Google Analytics -->
+
+
+  </head><body>
+
+<!-- SOURCE_FILE: https://opendev.org/openstack/nova-specs/src/doc/source/specs/stein/approved/amd-sev-libvirt-support.rst -->
+
+<script>
+    (function (window, document) {
+        var loader = function () {
+            var script = document.createElement("script"), tag = document.getElementsByTagName("script")[0];
+            script.src = "https://search.openstack.org/widget/embed.min.js?t="+Date.now();
+            tag.parentNode.insertBefore(script, tag);
+        };
+        window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+    })(window, document);
+</script>
+
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button class="navbar-toggle" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="brand-wrapper">
+        <a class="navbar-brand" href="https://www.openstack.org/"></a>
+      </div>
+      <div class="search-icon show"><i class="fa fa-search"></i> Search</div></div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <div class="search-container tiny">
+    <div class="openstack-search-bar" data-baseUrl="search.openstack.org" data-context="docs-openstack"></div>
+</div>
+      <ul class="nav navbar-nav navbar-main show">
+        <li class="search-container-mobile">
+    <div class="openstack-search-bar" data-baseUrl="search.openstack.org" data-context="docs-openstack"></div>
+</li>
+        <li> <!--Software -->
+          <a href="https://www.openstack.org/software/" class="drop" id="dropdownMenuSoftware">Software <i class="fa fa-caret-down"></i></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuSoftware">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/software/">Overview</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/software/project-navigator/openstack-components">OpenStack Components</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/software/project-navigator/sdks">SDKs</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/software/project-navigator/deployment-tools">Deployment Tools</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/assets/software/projectmap/openstack-map.pdf" target="_blank">OpenStack Map</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/software/sample-configs/">Sample Configs</a></li>
+          </ul>
+        </li>
+        <li> <!-- Use Cases -->
+          <a href="https://www.openstack.org/use-cases/" class="drop" id="dropdownMenuUsers">Use Cases <i class="fa fa-caret-down"></i></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuUsers">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/use-cases/">Users in Production</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/use-cases/bare-metal/">Ironic Bare Metal</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/use-cases/edge-computing/">Edge Computing</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/use-cases/telecoms-and-nfv/">Telecom & NFV</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/use-cases/science/">Science and HPC</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/use-cases/containers/">Containers</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/use-cases/enterprise/">Enterprise</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/surveys/landing">User Survey</a></li>
+          </ul>
+        </li>
+        <li> <!-- Events -->
+          <a href="https://www.openstack.org/events/" class="drop" id="dropdownMenuEvents">Events <i class="fa fa-caret-down"></i></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuEvents">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/summit/">Open Infrastructure Summits</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/ptg/">Project Teams Gathering</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/events/opendev-2020/">OpenDev</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/events/community-events/">Community Events</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/events/openstackdays">OpenStack & OpenInfra Days</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/videos/">Summit Videos</a></li>
+          </ul>
+        </li>
+        <li><!-- Community -->
+          <a href="https://www.openstack.org/community/" class="drop" id="dropdownMenuCommunity">Community <i class="fa fa-caret-down"></i></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuCommunity">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/community/">Welcome! Start Here</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/community/tech-committee">OpenStack Technical Committee</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/community/speakers/">Speakers Bureau</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://wiki.openstack.org">OpenStack Wiki</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/coa/">Get Certified (COA)</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/community/jobs/">Jobs</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/marketing/">Marketing Resources</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/news/">Community News</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://superuser.openstack.org">Superuser Magazine</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/community/supporting-organizations/">OpenInfra Foundation Supporting Organizations</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://openinfra.dev">Open Infrastructure Foundation (OpenInfra Foundation)</a></li>
+          </ul>
+        </li>
+        <li><!-- Marketplace -->
+          <a href="https://www.openstack.org/marketplace/" class="drop" id="dropdownMenuLearn">Marketplace <i class="fa fa-caret-down"></i></a>
+          <ul class="dropdown-menu dropdown-hover" role="menu" aria-labelledby="dropdownMenuEvents">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/marketplace/training/">Training</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/marketplace/distros/">Distros & Appliances</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/marketplace/public-clouds/">Public Clouds</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/marketplace/hosted-private-clouds/">Hosted Private Clouds</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/marketplace/remotely-managed-private-clouds/">Remotely Managed Private Clouds</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/marketplace/consulting/">Consulting & Integrators</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.openstack.org/marketplace/drivers/">Drivers</a></li>
+          </ul>
+        </li>
+        <li><!-- Blog -->
+          <a href="https://www.openstack.org/blog/">Blog</a>
+        </li>
+        <li><!-- Docs -->
+          <a href="http://docs.openstack.org/">Docs</a>
+        </li>
+        <li> <!-- Join -->
+            <li class="join-nav-section">
+              <a href="https://openinfra.dev/join/" id="dropdownMenuJoin">Join <i class="fa fa-caret-down"></i></a>
+              <ul class="dropdown-menu dropdown-hover" role="menu" aria-labelledby="dropdownMenuJoin" style="display: none;">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://openinfra.dev/join/">Sign up for Foundation Membership</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://openinfra.dev/join/">Sponsor the Foundation</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="https://openinfra.dev">More about the Foundation</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="https://www.openstack.org/Security/login/?BackURL=/home/" class="sign-in-btn">Log In</a>
+            </li>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- /.container -->
+</nav>
+
+    <div class="container docs-book-wrapper">
+      <div class="row">
+        <div class="col-lg-9 col-md-8 col-sm-8 col-lg-push-3 col-md-push-4 col-sm-push-4">
+<div class="row docs-title">
+  <div class="col-lg-8">
+      <h1>libvirt driver launching AMD SEV-encrypted instances</h1>
+    
+  </div>
+  <div class="docs-actions">
+    
+    <a href="add-emulated-virtual-tpm.html"><i class="fa fa-angle-double-left" data-toggle="tooltip" data-placement="top" title="Previous: Add support for emulated virtual TPM"></i></a>
+    
+    
+    <a href="count-quota-usage-from-placement.html"><i class="fa fa-angle-double-right" data-toggle="tooltip" data-placement="top" title="Next: Count quota usage from placement"></i></a>
+    
+    <a id="logABugLink1" href="" target="_blank" title="Found an error? Report a bug against this page"><i class="fa fa-bug" data-toggle="tooltip" data-placement="top" title="Report a Bug"></i></a>
+    
+  </div>
+</div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="docs-body" role="main">
+
+  <section id="libvirt-driver-launching-amd-sev-encrypted-instances">
+<h1>libvirt driver launching AMD SEV-encrypted instances<a class="headerlink" href="#libvirt-driver-launching-amd-sev-encrypted-instances" title="Permalink to this heading">¶</a></h1>
+<p><a class="reference external" href="https://blueprints.launchpad.net/nova/+spec/amd-sev-libvirt-support">https://blueprints.launchpad.net/nova/+spec/amd-sev-libvirt-support</a></p>
+<p>This spec proposes work required in order for nova’s libvirt driver to
+support launching of KVM instances which are encrypted using <a class="reference external" href="https://developer.amd.com/sev/">AMD’s
+SEV (Secure Encrypted Virtualization) technology</a>.</p>
+<section id="problem-description">
+<h2>Problem description<a class="headerlink" href="#problem-description" title="Permalink to this heading">¶</a></h2>
+<p>While data is typically encrypted today when stored on disk, it is
+stored in DRAM in the clear.  This can leave the data vulnerable to
+snooping by unauthorized administrators or software, or by hardware
+probing.  New non-volatile memory technology (NVDIMM) exacerbates this
+problem since an NVDIMM chip can be physically removed from a system
+with the data intact, similar to a hard drive.  Without encryption any
+stored information such as sensitive data, passwords, or secret keys
+can be easily compromised.</p>
+<p>AMD’s SEV offers a VM protection technology which transparently
+encrypts the memory of each VM with a unique key.  It can also
+calculate a signature of the memory contents, which can be sent to the
+VM’s owner as an attestation that the memory was encrypted correctly
+by the firmware.  SEV is particularly applicable to cloud computing
+since it can reduce the amount of trust VMs need to place in the
+hypervisor and administrator of their host system.</p>
+<section id="use-cases">
+<h3>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>As a cloud administrator, in order that my users can have greater
+confidence in the security of their running instances, I want to
+provide a flavor containing an SEV-specific <a class="reference external" href="https://docs.openstack.org/nova/latest/user/flavors.html#extra-specs-required-traits">required trait extra
+spec</a>
+which will allow users booting instances with that flavor to ensure
+that their instances run on an SEV-capable compute host with SEV
+encryption enabled.</p></li>
+<li><p>As a cloud user, in order to not have to trust my cloud operator
+with my secrets, I want to be able to boot VM instances with SEV
+functionality enabled.</p></li>
+</ol>
+</section>
+</section>
+<section id="proposed-change">
+<h2>Proposed change<a class="headerlink" href="#proposed-change" title="Permalink to this heading">¶</a></h2>
+<p>For Stein, the goal is a minimal but functional implementation which
+would satisfy the above use cases.  It is proposed that initial
+development and testing would include the following deliverables:</p>
+<ul>
+<li><p>Add detection of host SEV capabilities.  Logic is required to check
+that the various layers of the hardware and software hypervisor
+stack are SEV-capable:</p>
+<ul>
+<li><p>The presence of the following XML in the response from a libvirt
+<a class="reference external" href="https://libvirt.org/html/libvirt-libvirt-domain.html#virConnectGetDomainCapabilities">virConnectGetDomainCapabilities()</a>
+API call <a class="reference external" href="https://libvirt.org/git/?p=libvirt.git;a=commit;h=6688393c6b222b5d7cba238f21d55134611ede9c">indicates that both QEMU and the AMD Secure Processor
+(AMD-SP) support SEV functionality</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">domainCapabilities</span><span class="o">&gt;</span>
+  <span class="o">...</span>
+  <span class="o">&lt;</span><span class="n">features</span><span class="o">&gt;</span>
+    <span class="o">...</span>
+    <span class="o">&lt;</span><span class="n">sev</span> <span class="n">supported</span><span class="o">=</span><span class="s1">&#39;yes&#39;</span><span class="o">/&gt;</span>
+      <span class="o">...</span>
+    <span class="o">&lt;/</span><span class="n">sev</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">features</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">domainCapabilities</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This functionality-oriented check should preempt the need for any
+version checking in the driver.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/sys/module/kvm_amd/parameters/sev</span></code> should have the value <code class="docutils literal notranslate"><span class="pre">1</span></code>
+to indicate that the kernel has SEV capabilities enabled.  This
+should be readable by any user (i.e. even non-root).</p></li>
+</ul>
+<p>Note that both checks are required, since the presence of the first
+does not imply the second.</p>
+</li>
+<li><p>Support a standard trait which would be automatically detected per
+compute host based on the above logic.  This would most likely be
+called <code class="docutils literal notranslate"><span class="pre">HW_CPU_AMD_SEV</span></code> or similar, as an extension of <a class="reference external" href="https://github.com/openstack/nova/blob/c5a7002bd571379818c0108296041d12bc171728/nova/virt/libvirt/utils.py#L47">the
+existing CPU traits mapping</a>.</p></li>
+<li><p>When present in the flavor, this standard trait would indicate that
+the libvirt driver should include extra XML in the guest’s domain
+definition, in order to ensure the following:</p>
+<ul>
+<li><p>SEV security is enabled.</p></li>
+<li><p>The boot disk cannot be <code class="docutils literal notranslate"><span class="pre">virtio-blk</span></code> (due to a resource constraint
+w.r.t. bounce buffers).</p></li>
+<li><p>The VM uses machine type <code class="docutils literal notranslate"><span class="pre">q35</span></code> and UEFI via OVMF.  (<code class="docutils literal notranslate"><span class="pre">q35</span></code> is
+required in order to bind all the virtio devices to the PCIe
+bridge so that they use virtio 1.0 and <em>not</em> virtio 0.9, since
+QEMU’s <code class="docutils literal notranslate"><span class="pre">iommu_platform</span></code> feature is added in virtio 1.0 only.)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">iommu</span></code> attribute is <code class="docutils literal notranslate"><span class="pre">on</span></code> for all virtio devices.  Despite
+the name, this does not require the guest or host to have an IOMMU
+device, but merely enables the virtio flag which indicates that
+virtualized DMA should be used.  This ties into the SEV code to
+handle memory encryption/decryption, and prevents IO buffers being
+shared between host and guest.</p>
+<p>The DMA will go through bounce buffers, so some overhead is expected
+compared to non-SEV guests.</p>
+<p>(Note: virtio-net device queues are not encrypted.)</p>
+</li>
+<li><p>All the memory regions allocated by QEMU must be pinned, so that
+they cannot be swapped to disk.  This can be achieved by setting a
+hard memory limit via <code class="docutils literal notranslate"><span class="pre">&lt;hard_limit&gt;</span></code> in the <code class="docutils literal notranslate"><span class="pre">&lt;memtune&gt;</span></code>
+section of the domain’s XML.  This does <em>not</em> reflect a
+requirement for additional memory; it is only required in order to
+achieve the memory pinning.</p>
+<p>Another method for pinning the memory is to enable <a class="reference external" href="https://docs.openstack.org/nova/rocky/admin/huge-pages.html">hugepages</a> by
+booting with the <code class="docutils literal notranslate"><span class="pre">hw:mem_page_size=large</span></code> property set either on
+the flavor or the image, although these have the minor
+disadvantages of requiring the operator or user to remember one
+extra detail, and also may require undesirable duplication of
+flavors or images.</p>
+<p>Note that this memory pinning is expected to be a temporary
+requirement; the latest firmwares already support page copying (as
+documented by the <code class="docutils literal notranslate"><span class="pre">COPY</span></code> API in the <a class="reference external" href="https://developer.amd.com/wp-content/resources/55766.PDF">AMD SEV-KM API
+Specification</a>), so when OS starts supporting the page-move or
+page-migration commmand then it will no longer be needed.</p>
+<p>Based on instrumentation of QEMU, the limit per VM should be
+calculated and accounted for as follows:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Memory region type</p></th>
+<th class="head"><p>Size</p></th>
+<th class="head"><p>Accounting mechanism</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>VM RAM</p></td>
+<td><p>set by flavor</p></td>
+<td><p>placement service</p></td>
+</tr>
+<tr class="row-odd"><td><p>video memory</p></td>
+<td><p>set by flavor/image</p></td>
+<td><p>placement service</p></td>
+</tr>
+<tr class="row-even"><td><p>UEFI ROM</p></td>
+<td><p>4096KB</p></td>
+<td><p><a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#DEFAULT.reserved_host_memory_mb">reserved_host_memory_mb</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>UEFI var store (pflash)</p></td>
+<td><p>4096KB</p></td>
+<td><p><a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#DEFAULT.reserved_host_memory_mb">reserved_host_memory_mb</a></p></td>
+</tr>
+<tr class="row-even"><td><p>pc.rom</p></td>
+<td><p>128KB</p></td>
+<td><p><a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#DEFAULT.reserved_host_memory_mb">reserved_host_memory_mb</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>isa-bios</p></td>
+<td><p>128KB</p></td>
+<td><p><a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#DEFAULT.reserved_host_memory_mb">reserved_host_memory_mb</a></p></td>
+</tr>
+<tr class="row-even"><td><p>ACPI tables</p></td>
+<td><p>2384KB</p></td>
+<td><p><a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#DEFAULT.reserved_host_memory_mb">reserved_host_memory_mb</a></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<div><blockquote>
+<div><p>It is also recommended to include an additional padding of at
+least 256KB for safety, since ROM sizes can occasionally change.
+For example the total of 10832KB required here for ROMs / ACPI
+tables should be rounded up to 16MB.</p>
+<p>The first two values are expected to commonly vary per VM, and
+are already accounted for dynamically by the placement service.</p>
+<p>The remainder have traditionally (i.e. for non-SEV instances) been
+accounted for alongside the overhead for the host OS via nova’s
+memory pool defined by the <a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#DEFAULT.reserved_host_memory_mb">reserved_host_memory_mb</a> config
+option, and this does not need to change.  However, whilst the
+overhead incurred is no different to that required for non-SEV
+instances, it is much more important to get the hard limit right
+when pinning memory; if it’s too low, the VM will get killed, and
+if it’s too high, there’s another risk of the host’s OOM killer
+being invoked, or failing that, the host crashing because it
+cannot reclaim the memory used by the guest.</p>
+<p>Therefore it may be prudent to implement an extra check which
+multiplies this reservation requirement by the number of instances
+and ensures that it does not cause the host’s memory usage to
+exceed what’s available.  This can probably be initially
+implemented as a check in the driver, but regardless, the way to
+avoid this over-commitment must be documented so that operators
+can correctly plan memory usage and configure their cloud
+accordingly.</p>
+</div></blockquote>
+<p>So for example assuming a 4GB VM:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">domain</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;kvm&#39;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">os</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nb">type</span> <span class="n">arch</span><span class="o">=</span><span class="s1">&#39;x86_64&#39;</span> <span class="n">machine</span><span class="o">=</span><span class="s1">&#39;pc-q35-2.11&#39;</span><span class="o">&gt;</span><span class="n">hvm</span><span class="o">&lt;/</span><span class="nb">type</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">loader</span> <span class="n">readonly</span><span class="o">=</span><span class="s1">&#39;yes&#39;</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;pflash&#39;</span><span class="o">&gt;/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">qemu</span><span class="o">/</span><span class="n">ovmf</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="n">ms</span><span class="o">-</span><span class="mi">4</span><span class="n">m</span><span class="o">-</span><span class="n">code</span><span class="o">.</span><span class="n">bin</span><span class="o">&lt;/</span><span class="n">loader</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">nvram</span><span class="o">&gt;/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libvirt</span><span class="o">/</span><span class="n">qemu</span><span class="o">/</span><span class="n">nvram</span><span class="o">/</span><span class="n">sles15</span><span class="o">-</span><span class="n">sev</span><span class="o">-</span><span class="n">guest_VARS</span><span class="o">.</span><span class="n">fd</span><span class="o">&lt;/</span><span class="n">nvram</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">boot</span> <span class="n">dev</span><span class="o">=</span><span class="s1">&#39;hd&#39;</span><span class="o">/&gt;</span>
+  <span class="o">&lt;/</span><span class="n">os</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">launchSecurity</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;sev&#39;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">cbitpos</span><span class="o">&gt;</span><span class="mi">47</span><span class="o">&lt;/</span><span class="n">cbitpos</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">reducedPhysBits</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">reducedPhysBits</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">policy</span><span class="o">&gt;</span><span class="mh">0x0037</span><span class="o">&lt;/</span><span class="n">policy</span><span class="o">&gt;</span>
+  <span class="o">&lt;/</span><span class="n">launchSecurity</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">memtune</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">hard_limit</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;KiB&#39;</span><span class="o">&gt;</span><span class="mi">4718592</span><span class="o">&lt;/</span><span class="n">hard_limit</span><span class="o">&gt;</span>
+    <span class="o">...</span>
+  <span class="o">&lt;/</span><span class="n">memtune</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">devices</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">rng</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;virtio&#39;</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">driver</span> <span class="n">iommu</span><span class="o">=</span><span class="s1">&#39;on&#39;</span><span class="o">/&gt;</span>
+      <span class="o">...</span>
+    <span class="o">&lt;/</span><span class="n">rng</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">memballoon</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;virtio&#39;</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">driver</span> <span class="n">iommu</span><span class="o">=</span><span class="s1">&#39;on&#39;</span> <span class="o">/&gt;</span>
+      <span class="o">...</span>
+    <span class="o">&lt;/</span><span class="n">memballoon</span><span class="o">&gt;</span>
+    <span class="o">...</span>
+    <span class="o">&lt;</span><span class="n">video</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">model</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;qxl&#39;</span> <span class="n">ram</span><span class="o">=</span><span class="s1">&#39;65536&#39;</span> <span class="n">vram</span><span class="o">=</span><span class="s1">&#39;65536&#39;</span> <span class="n">vgamem</span><span class="o">=</span><span class="s1">&#39;16384&#39;</span> <span class="n">heads</span><span class="o">=</span><span class="s1">&#39;1&#39;</span>  <span class="n">primary</span><span class="o">=</span><span class="s1">&#39;yes&#39;</span><span class="o">/&gt;</span>
+    <span class="o">&lt;/</span><span class="n">video</span><span class="o">&gt;</span>
+    <span class="o">...</span>
+  <span class="o">&lt;/</span><span class="n">devices</span><span class="o">&gt;</span>
+  <span class="o">...</span>
+<span class="o">&lt;/</span><span class="n">domain</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If SEV’s requirement of a Q35 machine type cannot be satisfied by
+<code class="docutils literal notranslate"><span class="pre">hw_machine_type</span></code> specified by the image (if present), or the value
+specified by <code class="docutils literal notranslate"><span class="pre">libvirt.hw_machine_type</span></code> in <code class="docutils literal notranslate"><span class="pre">nova.conf</span></code> (<a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#libvirt.hw_machine_type">which is
+not set by default</a>),
+then an exception should be raised so that the build fails.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cbitpos</span></code> and <code class="docutils literal notranslate"><span class="pre">reducedPhysBits</span></code> are dependent on the processor
+family, and can be obtained through the <code class="docutils literal notranslate"><span class="pre">sev</span></code> element from <a class="reference external" href="https://libvirt.org/formatdomaincaps.html#elementsSEV">the
+domain capabilities</a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">policy</span></code> allows a particular SEV policy, as documented in <cite>the AMD
+SEV-KM API Specification</cite>.  Initially the policy will be hardcoded and
+not modifiable by cloud tenants or cloud operators. The policy will
+be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define SEV_POLICY_NORM \</span>
+    <span class="p">((</span><span class="n">SEV_POLICY</span><span class="p">)(</span><span class="n">SEV_POLICY_NODBG</span><span class="o">|</span><span class="n">SEV_POLICY_NOKS</span><span class="o">|</span> \
+      <span class="n">SEV_POLICY_ES</span><span class="o">|</span><span class="n">SEV_POLICY_DOMAIN</span><span class="o">|</span><span class="n">SEV_POLICY_SEV</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>which equates to <code class="docutils literal notranslate"><span class="pre">0x0037</span></code>.  In the future, when support is added to
+QEMU and libvirt, this will permit live migration to other machines in
+the same cluster <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> (i.e. with the same OCA cert) and uses SEV-ES,
+but doesn’t permit other guests or the hypervisor to directly inspect
+memory.  If the upstream support for SEV-ES does not arrive in time
+then SEV-ES will be not be included in the policy.</p>
+<p>A future spec could be submitted to make this configurable via an
+extra spec or image property.</p>
+<p>For reference, <a class="reference external" href="https://github.com/AMDESE/AMDSEV/">the AMDSEV GitHub repository</a> provides <a class="reference external" href="https://github.com/AMDESE/AMDSEV/blob/master/xmls/sample.xml">a complete example</a> of a
+domain’s XML definition with <a class="reference external" href="https://libvirt.org/formatdomain.html#sev">libvirt’s SEV options</a> enabled.</p>
+<p>The sum of the work described above could also mean that images with
+the property <code class="docutils literal notranslate"><span class="pre">trait:HW_CPU_AMD_SEV=required</span></code> would similarly affect
+the process of launching instances.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Even though live migration is not currently supported by the
+hypervisor software stack, it will be in the future.</p>
+</aside>
+</aside>
+<section id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Permalink to this heading">¶</a></h3>
+<p>The following limitations will be removed in the future as the
+hardware, firmware, and various layer of software receive new
+features:</p>
+<ul class="simple">
+<li><p>SEV-encrypted VMs cannot yet be live-migrated, or suspended,
+consequently nor resumed.  As already mentioned, support is coming
+in the future.  However this does mean that in the short term, usage
+of SEV will have an impact on compute node maintenance, since
+SEV-encrypted instances will need to be fully shut down before
+migrating off an SEV host.</p></li>
+<li><p>SEV-encrypted VMs cannot contain directly accessible host devices
+(PCI passthrough).  So for example mdev vGPU support will not
+currently work.  However technologies based on vhost-user should
+work fine.</p></li>
+<li><p>The boot disk of SEV-encrypted VMs cannot be <code class="docutils literal notranslate"><span class="pre">virtio-blk</span></code>.  Using
+<code class="docutils literal notranslate"><span class="pre">virtio-scsi</span></code> or SATA for the boot disk works as expected, as does
+<code class="docutils literal notranslate"><span class="pre">virtio-blk</span></code> for non-boot disks.</p></li>
+</ul>
+<p>The following limitations are expected long-term:</p>
+<ul>
+<li><p>The operating system running in an encrypted virtual machine must
+contain SEV support.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">q35</span></code> machine type does not provide an IDE controller,
+therefore IDE devices are not supported.  In particular this means
+that nova’s libvirt driver’s current default behaviour on the x86_64
+architecture of attaching the config drive as an <code class="docutils literal notranslate"><span class="pre">iso9660</span></code> IDE
+CD-ROM device will not work.  There are two potential workarounds:</p>
+<ol class="arabic simple">
+<li><p>Change <code class="docutils literal notranslate"><span class="pre">CONF.config_drive_format</span></code> in <code class="docutils literal notranslate"><span class="pre">nova.conf</span></code> from <a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#DEFAULT.config_drive_format">its
+default value</a>
+<code class="docutils literal notranslate"><span class="pre">iso9660</span></code> to <code class="docutils literal notranslate"><span class="pre">vfat</span></code>.  This will result in <code class="docutils literal notranslate"><span class="pre">virtio</span></code> being
+used instead.  However this per-host setting could potentially
+break images with legacy OS’s which expect the config drive to be
+an IDE CD-ROM.  It would also not deal with other CD-ROM devices.</p></li>
+<li><p>Set the (largely <a class="reference external" href="https://bugs.launchpad.net/glance/+bug/1808868">undocumented</a>)
+<code class="docutils literal notranslate"><span class="pre">hw_cdrom_bus</span></code> image property to <code class="docutils literal notranslate"><span class="pre">virtio</span></code>, which is
+recommended as a replacement for <code class="docutils literal notranslate"><span class="pre">ide</span></code>, and <code class="docutils literal notranslate"><span class="pre">hw_scsi_model</span></code>
+to <code class="docutils literal notranslate"><span class="pre">virtio-scsi</span></code>.</p></li>
+</ol>
+<p>Some potentially cleaner long-term solutions which require code
+changes are suggested as a stretch goal in the <a class="reference internal" href="#work-items">Work Items</a> section
+below.</p>
+</li>
+</ul>
+<p>For the sake of eliminating any doubt, the following actions are <em>not</em>
+expected to be limited when SEV encryption is used:</p>
+<ul class="simple">
+<li><p>Cold migration or shelve, since they power off the VM before the
+operation at which point there is no encrypted memory (although this
+could change since there is work underway to add support for <a class="reference external" href="https://pmem.io/">PMEM</a>)</p></li>
+<li><p>Snapshot, since it only snapshots the disk</p></li>
+<li><p>Evacuate, since this is only initiated when the VM is assumed to be
+dead or there is a good reason to kill it</p></li>
+<li><p>Attaching any volumes, as long as they do not require attaching via
+an IDE bus</p></li>
+<li><p>Use of spice / VNC / serial / RDP consoles</p></li>
+<li><p><a class="reference external" href="https://www.suse.com/documentation/sles-12/singlehtml/article_vt_best_practices/article_vt_best_practices.html#sec.vt.best.perf.numa.vmguest">VM guest virtual NUMA (a.k.a. vNUMA)</a></p></li>
+</ul>
+</section>
+<section id="alternatives">
+<h3>Alternatives<a class="headerlink" href="#alternatives" title="Permalink to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>Rather than immediately implementing automatic detection of
+SEV-capable hosts and providing access to these via a new standard
+trait (<code class="docutils literal notranslate"><span class="pre">HW_CPU_AMD_SEV</span></code> or similar),</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.openstack.org/osc-placement/latest/cli/index.html#trait-create">create a custom trait</a>
+specifically for the purpose of marking flavors as SEV-capable,
+and then</p></li>
+<li><p><a class="reference external" href="https://docs.openstack.org/osc-placement/latest/cli/index.html#resource-provider-trait-set">manually assign that trait</a>
+to each compute node which is SEV-capable.</p></li>
+</ul>
+<p>This would have the minor advantages of slightly decreasing the
+amount of effort required in order to reach a functional prototype,
+and giving operators the flexibility to choose on which compute
+hosts SEV should be allowed.  But conversely it has the
+disadvantages of requiring merging of hardcoded references to a
+custom trait into nova’s <code class="docutils literal notranslate"><span class="pre">master</span></code> branch, requiring extra work
+for operators, and incurring the risk of a compute node which isn’t
+capable of SEV (either due to missing hardware or software support)
+being marked as SEV-capable, which would most likely result in VM
+launch failures.</p>
+</li>
+<li><p>Rather than using a single trait to both facilitate the matching of
+instances requiring SEV with SEV-capable compute hosts <em>and</em>
+indicate to nova’s libvirt driver that SEV should be used when
+booting, the trait could be used solely for scheduling of the
+instance on SEV hosts, and an additional extra spec property such
+as <code class="docutils literal notranslate"><span class="pre">hw:sev_policy</span></code> could be used to ensure that the VM is defined
+and booted with the necessary extra SEV-specific domain XML.</p>
+<p>However this would create extra friction for the administrators
+defining SEV-enabled flavors, and it is also hard to imagine why
+anyone would want a flavor which requires instances to run on
+SEV-capable hosts without simultaneously taking advantage of those
+hosts’ SEV capability.  Additionally, whilst this remains a simple
+Boolean toggle, using a single trait remains consistent with <a class="reference external" href="http://lists.openstack.org/pipermail/openstack-dev/2018-October/135446.html">a
+pre-existing upstream agreement on how to specify options that
+impact scheduling and configuration</a>.</p>
+</li>
+<li><p>Rather than using a standard trait, a normal flavor extra spec
+could be used to require the SEV feature; however it is understood
+that <a class="reference external" href="https://docs.openstack.org/nova/latest/admin/configuration/schedulers.html#computecapabilitiesfilter">this approach is less preferable because traits provide
+consistent naming for CPU features in some virt drivers, and
+querying traits is efficient</a>.</p></li>
+</ol>
+</section>
+<section id="data-model-impact">
+<h3>Data model impact<a class="headerlink" href="#data-model-impact" title="Permalink to this heading">¶</a></h3>
+<p>A new trait will be used to denote SEV-capable compute hosts.</p>
+<p>No new data objects or database schema changes will be required.</p>
+</section>
+<section id="rest-api-impact">
+<h3>REST API impact<a class="headerlink" href="#rest-api-impact" title="Permalink to this heading">¶</a></h3>
+<p>None, although future work may require extending the REST API so that
+users can verify the hardware’s attestation that the memory was
+encrypted correctly by the firmware.  However if such an extension
+would not be useful in other virt drivers across multiple CPU vendors,
+it may be preferable to deliver this functionality via an independent
+AMD-specific service.</p>
+</section>
+<section id="security-impact">
+<h3>Security impact<a class="headerlink" href="#security-impact" title="Permalink to this heading">¶</a></h3>
+<p>This change does not add or handle any secret information other than
+of course data within the guest VM’s encrypted memory.  The secrets
+used to implement SEV are locked inside the AMD hardware.  The
+hardware random number generator uses the CTR_DRBG construct from
+<a class="reference external" href="https://en.wikipedia.org/wiki/NIST_SP_800-90A">NIST SP 800-90A</a>
+which has not been found to be susceptible to any back doors.  It uses
+AES counter mode to generate the random numbers.</p>
+<p>SEV protects data of a VM from attacks originating from outside the
+VM, including the hypervisor and other VMs.  Attacks which trick the
+hypervisor into reading pages from another VM will not work because
+the data obtained will be encrypted with a key which is inaccessible
+to the attacker and the hypervisor.  SEV protects data in caches by
+tagging each cacheline with the owner of that data which prevents the
+hypervisor and other VMs from reading the cached data.</p>
+<p>SEV does not protect against side-channel attacks against the VM
+itself or attacks on software running in the VM.  It is important to
+keep the VM up to date with patches and properly configure the
+software running on the VM.</p>
+<p>This first proposed implementation provides some protection but is
+notably missing the ability for the cloud user to verify the
+attestation which SEV can provide using the <code class="docutils literal notranslate"><span class="pre">LAUNCH_MEASURE</span></code>
+firmware call.  Adding such attestation ability in the future would
+mean that much less trust would need to be placed in the cloud
+administrator because the VM would be encrypted and integrity
+protected using keys the cloud user provides to the SEV firmware over
+a protected channel.  The cloud user would then know with certainty
+that they are running the proper image, that the memory is indeed
+encrypted, and that they are running on an authentic AMD platform with
+SEV hardware and not an impostor platform setup to steal their data.
+The cloud user can verify all of this before providing additional
+secrets to the VM, for example storage decryption keys.  This spec is
+a proposed first step in the process of obtaining the full value that
+SEV can offer to prevent the cloud administrator from being able to
+access the data of the cloud users.</p>
+<p>It is strongly recommended that <a class="reference external" href="mailto:openstack-security&#37;&#52;&#48;lists&#46;openstack&#46;org">the OpenStack Security Group</a> is kept in the loop and
+given the opportunity to review each stage of work, to help ensure
+that security is implemented appropriately.</p>
+</section>
+<section id="notifications-impact">
+<h3>Notifications impact<a class="headerlink" href="#notifications-impact" title="Permalink to this heading">¶</a></h3>
+<p>It may be desirable to access the information that the instance is
+running encrypted, e.g. a billing cloud provider might want to impose
+a security surcharge, whereby encrypted instances are billed
+differently to unencrypted ones.  However this should require no
+immediate impact on notifications, since the instance payload in the
+versioned notification has the flavor along with its extra specs,
+where the SEV enablement trait would be defined.</p>
+<p>In the case where the SEV trait is specified on the image backing the
+server rather than on the flavor, the notification would just have the
+image UUID in it.  The consumer could look up the image by UUID to
+check for the presence of the SEV trait, although this does open up a
+potential race window where image properties could change after the
+instance was created.  This could be remedied by future work which
+would include image properties in the instance launch notification, or
+storing the image metadata in <code class="docutils literal notranslate"><span class="pre">instance_extra</span></code> as is currently done
+for the flavor.</p>
+</section>
+<section id="other-end-user-impact">
+<h3>Other end user impact<a class="headerlink" href="#other-end-user-impact" title="Permalink to this heading">¶</a></h3>
+<p>The end user will harness SEV through the existing mechanisms of
+traits in flavor extra specs and image properties.  Later on it may
+make sense to add support for scheduler hints (see the <a class="reference internal" href="#future-work">Future Work</a>
+section below).</p>
+</section>
+<section id="performance-impact">
+<h3>Performance Impact<a class="headerlink" href="#performance-impact" title="Permalink to this heading">¶</a></h3>
+<p>No performance impact on nova is anticipated.</p>
+<p>Preliminary testing indicates that the expected performance impact on
+a VM of enabling SEV is moderate; a degradation of 1% to 6% has been
+observed depending on the particular workload and test.  More details
+can be seen in slides 4–6 of <a class="reference external" href="http://events17.linuxfoundation.org/sites/events/files/slides/AMD%20SEV-ES.pdf">AMD’s presentation on SEV-ES at the
+2017 Linux Security Summit</a>.</p>
+<p>If compression is being used on swap disks then more storage may be
+required because the memory of encrypted VMs will not compress to a
+smaller size.</p>
+<p>Memory deduplication mechanisms such as KSM (kernel samepage merging)
+would be rendered ineffective.</p>
+</section>
+<section id="other-deployer-impact">
+<h3>Other deployer impact<a class="headerlink" href="#other-deployer-impact" title="Permalink to this heading">¶</a></h3>
+<p>In order for users to be able to use SEV, the operator will need to
+perform the following steps:</p>
+<ul class="simple">
+<li><p>Deploy SEV-capable hardware as nova compute hosts.</p></li>
+<li><p>Ensure that they have an appropriately configured software stack, so
+that the various layers are all SEV ready:</p>
+<ul>
+<li><p>kernel &gt;= 4.16</p></li>
+<li><p>QEMU &gt;= 2.12</p></li>
+<li><p>libvirt &gt;= 4.5</p></li>
+<li><p>ovmf &gt;= commit 75b7aa9528bd 2018-07-06</p></li>
+</ul>
+</li>
+</ul>
+<p>Finally, a cloud administrator will need to define SEV-enabled flavors
+as described above, unless it is sufficient for users to define
+SEV-enabled images.</p>
+</section>
+<section id="developer-impact">
+<h3>Developer impact<a class="headerlink" href="#developer-impact" title="Permalink to this heading">¶</a></h3>
+<p>None</p>
+</section>
+<section id="upgrade-impact">
+<h3>Upgrade impact<a class="headerlink" href="#upgrade-impact" title="Permalink to this heading">¶</a></h3>
+<p>None</p>
+</section>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this heading">¶</a></h2>
+<section id="assignee-s">
+<h3>Assignee(s)<a class="headerlink" href="#assignee-s" title="Permalink to this heading">¶</a></h3>
+<dl class="simple">
+<dt>Primary assignee:</dt><dd><p>adam.spiers</p>
+</dd>
+<dt>Other contributors:</dt><dd><p>Various developers from SUSE and AMD</p>
+</dd>
+</dl>
+</section>
+<section id="work-items">
+<h3>Work Items<a class="headerlink" href="#work-items" title="Permalink to this heading">¶</a></h3>
+<p>It is expected that following sequence of extensions, or similar, will
+need to be made to nova’s libvirt driver:</p>
+<ol class="arabic">
+<li><p>Add detection of host SEV capabilities as detailed above.</p></li>
+<li><p>Consume the new SEV detection code in order to provide the
+<code class="docutils literal notranslate"><span class="pre">HW_CPU_AMD_SEV</span></code> trait.</p></li>
+<li><p>Add a new <code class="docutils literal notranslate"><span class="pre">nova.virt.libvirt.LibvirtConfigGuestFeatureSEV</span></code> class.</p></li>
+<li><p>Extend <code class="docutils literal notranslate"><span class="pre">nova.virt.libvirt.LibvirtDriver._set_features()</span></code> to add
+the required XML to the VM’s domain definition if the new trait is
+in the flavor of the VM being launched.</p></li>
+<li><p>Since live migration between hosts is not (yet) supported for</p>
+<ul class="simple">
+<li><p>SEV-encrypted instances, nor</p></li>
+<li><p><a class="reference external" href="https://github.com/qemu/qemu/commit/8fa4466d77b44f4f58f3836601f31ca5e401485d">between unencrypted and SEV-encrypted states in either direction</a>,</p></li>
+</ul>
+<p>prevent nova from live-migrating any SEV-encrypted instance, or
+resizing onto a different compute host.  Alternatively, nova could
+catch the error raised by QEMU, which would be propagated via
+libvirt, and handle it appropriately.  We could build in
+higher-layer checks later if it becomes a major nuisance for
+operators.</p>
+</li>
+<li><p>Similarly, attempts to suspend / resume an SEV-encrypted domain are
+not yet supported, and therefore should either be prevented, or the
+error caught and handled.</p></li>
+<li><p>(Stretch goal) Adopt one of the following suggested code changes
+for reducing or even eliminating usage on x86 architectures of the
+IDE bus for CD-ROM devices such as the config drive:</p>
+<ol class="arabic">
+<li><p>Simply change <a class="reference external" href="https://github.com/openstack/nova/blob/396156eb13521a0e7af4488a8cd4693aa65a0da2/nova/virt/libvirt/blockinfo.py#L267">the hardcoded usage of an IDE bus for CD-ROMs on
+x86</a>
+to <code class="docutils literal notranslate"><span class="pre">scsi</span></code> to be consistent with all other CPU architectures,
+since it appears that the use of <code class="docutils literal notranslate"><span class="pre">ide</span></code> only remains due to
+legacy x86 code and the fact that support for other CPU
+architectures was added later.  The <code class="docutils literal notranslate"><span class="pre">hw_cdrom_bus=ide</span></code> image
+property could override this on legacy images lacking SCSI
+support.</p></li>
+<li><p>Auto-detect the cases where the VM has no IDE controller, and
+automatically switch to <code class="docutils literal notranslate"><span class="pre">scsi</span></code> or <code class="docutils literal notranslate"><span class="pre">virtio-scsi</span></code> in those
+cases.</p></li>
+<li><p>Introduce a new <code class="docutils literal notranslate"><span class="pre">nova.conf</span></code> option for specifying the default
+bus to use for CD-ROMs.  Then for instance the default could be
+<code class="docutils literal notranslate"><span class="pre">scsi</span></code> (for consistency with other CPU architectures) or
+<code class="docutils literal notranslate"><span class="pre">virtio</span></code>, with <code class="docutils literal notranslate"><span class="pre">hw_cdrom_bus</span></code> overriding this value where
+needed.  This is likely to be more future-proof as the use of
+very old machine types is gradually phased out, although the
+downside is a small risk of breaking legacy images.</p>
+<p>If there exist clouds where such legacy x86 images are common,
+the option could then be set to <code class="docutils literal notranslate"><span class="pre">ide</span></code> and
+<code class="docutils literal notranslate"><span class="pre">hw_cdrom_bus=virtio</span></code> overriding when newer machine types are
+required for SEV (or any other reason).  Although this is
+perhaps sufficiently unlikely as to make a new config option
+overkill.</p>
+</li>
+</ol>
+</li>
+</ol>
+<p>Additionally documentation should be written, as detailed in the
+<a class="reference internal" href="#documentation-impact">Documentation Impact</a> section below.</p>
+</section>
+<section id="future-work">
+<h3>Future work<a class="headerlink" href="#future-work" title="Permalink to this heading">¶</a></h3>
+<p>Looking beyond Stein, there is scope for several strands of additional
+work for enriching nova’s SEV support:</p>
+<ul class="simple">
+<li><p>Extend the <a class="reference external" href="https://docs.openstack.org/nova/rocky/admin/configuration/schedulers.html#computecapabilitiesfilter">ComputeCapabilitiesFilter</a>
+scheduler filter to support scheduler hints, so that SEV can be
+chosen to be enabled per instance, eliminating the need for
+operators to configure SEV-specific flavors or images.</p></li>
+<li><p>If there is sufficient demand from users, make the SEV policy
+configurable via an extra spec or image property.</p></li>
+<li><p>Provide some mechanism by which users can access the attestation
+measurement provided by SEV’s <code class="docutils literal notranslate"><span class="pre">LAUNCH_MEASURE</span></code> command, in order
+to verify that the guest memory was encrypted correctly by the
+firmware.  For example, nova’s API could be extended; however if
+this cannot be done in a manner which applies across virt drivers /
+CPU vendors, then it may fall outside the scope of nova and require
+an alternative approach such as a separate AMD-only endpoint.</p></li>
+</ul>
+</section>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Special hardware which supports SEV for development, testing, and CI.</p></li>
+<li><p>Recent versions of the hypervisor software stack which all support
+SEV, as detailed in <a class="reference internal" href="#other-deployer-impact">Other deployer impact</a> above.</p></li>
+<li><p>UEFI bugs will need to be addressed if not done so already:</p>
+<ul>
+<li><p><a class="reference external" href="https://bugs.launchpad.net/nova/+bug/1607400">Bug #1607400 “UEFI not supported on SLES” : Bugs : OpenStack Compute (nova)</a></p></li>
+<li><p><a class="reference external" href="https://bugs.launchpad.net/nova/+bug/1785123">Bug #1785123 “UEFI NVRAM lost on cold migration or resize” : Bugs : OpenStack Compute (nova)</a></p></li>
+<li><p><a class="reference external" href="https://bugs.launchpad.net/nova/+bug/1633447">Bug #1633447 “nova stop/start or reboot –hard resets uefi nvram…” : Bugs : OpenStack Compute (nova)</a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">fakelibvirt</span></code> test driver will need adaptation to emulate
+SEV-capable hardware.</p>
+<p>Corresponding unit/functional tests will need to be extended or added
+to cover:</p>
+<ul class="simple">
+<li><p>detection of SEV-capable hardware and software, e.g. perhaps as an
+extension of
+<code class="docutils literal notranslate"><span class="pre">nova.tests.functional.libvirt.test_report_cpu_traits.LibvirtReportTraitsTests</span></code></p></li>
+<li><p>the use of a trait to include extra SEV-specific libvirt domain XML
+configuration, e.g. within
+<code class="docutils literal notranslate"><span class="pre">nova.tests.unit.virt.libvirt.test_config</span></code></p></li>
+</ul>
+<p>There will likely be issues to address due to hard-coded assumptions
+oriented towards Intel CPUs either in Nova code or its tests.</p>
+<p>Tempest tests could also be included if SEV hardware is available, either
+in the gate or via third-party CI.</p>
+</section>
+<section id="documentation-impact">
+<h2>Documentation Impact<a class="headerlink" href="#documentation-impact" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>A new entry should be added in <a class="reference external" href="https://docs.openstack.org/nova/latest/user/support-matrix.html">the Feature Support Matrix</a>,
+which refers to the new trait and shows the current <a class="reference internal" href="#limitations">limitations</a>.</p></li>
+<li><p>The <a class="reference external" href="https://docs.openstack.org/nova/rocky/admin/configuration/hypervisor-kvm.html">KVM section of the Configuration Guide</a>
+should be updated with details of how to set up SEV-capable
+hypervisors.  It would be prudent to mention the current
+<a class="reference internal" href="#limitations">limitations</a> here too, including the impact on config drive
+configuration, compute host maintenance, the need to correctly
+calculate <a class="reference external" href="https://docs.openstack.org/nova/rocky/configuration/config.html#DEFAULT.reserved_host_memory_mb">reserved_host_memory_mb</a> based on the expected maximum
+number of SEV guests simultaneously running on the host, and the
+details provided above (such as memory region sizes) which cover how
+to calculate it correctly.</p></li>
+</ul>
+<p>Other non-nova documentation should be updated too:</p>
+<ul class="simple">
+<li><p>The <a class="reference external" href="https://docs.openstack.org/os-traits/latest/">documentation for os-traits</a> should be extended
+where appropriate.</p></li>
+<li><p>The <a class="reference external" href="https://docs.openstack.org/security-guide/compute/hardening-the-virtualization-layers.html">“Hardening the virtualization layers” section of the Security
+Guide</a>
+would be an ideal location to describe the whole process of
+providing and consuming SEV functionality.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developer.amd.com/sev">AMD SEV landing page</a></p></li>
+<li><p><a class="reference external" href="https://developer.amd.com/wp-content/resources/55766.PDF">AMD SEV-KM API Specification</a></p></li>
+<li><p><a class="reference external" href="https://github.com/AMDESE/AMDSEV/">AMD SEV github repository containing examples and tools</a></p></li>
+<li><p><a class="reference external" href="http://events17.linuxfoundation.org/sites/events/files/slides/AMD%20SEV-ES.pdf">Slides from the 2017 Linux Security Summit describing SEV and
+preliminary performance results</a></p></li>
+<li><p><a class="reference external" href="https://libvirt.org/formatdomain.html#sev">libvirt’s SEV options</a></p></li>
+</ul>
+</section>
+<section id="history">
+<h2>History<a class="headerlink" href="#history" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">Revisions</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Release Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Stein</p></td>
+<td><p>Introduced</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="docs-actions">
+          
+            <a href="add-emulated-virtual-tpm.html"><i class="fa fa-angle-double-left" data-toggle="tooltip" data-placement="top" title="Previous: Add support for emulated virtual TPM"></i></a>
+          
+          
+            <a href="count-quota-usage-from-placement.html"><i class="fa fa-angle-double-right" data-toggle="tooltip" data-placement="top" title="Next: Count quota usage from placement"></i></a>
+          
+            <a id="logABugLink3" href="" target="_blank" title="Found an error? Report a bug against this page"><i class="fa fa-bug" data-toggle="tooltip" data-placement="top" title="Report a Bug"></i></a>
+          
+          </div>
+          <div class="row docs-byline bottom">
+            <div class="docs-updated">this page last updated: 2019-01-03 18:15:49</div>
+          </div>
+          <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-8 docs-license">
+<a href="https://creativecommons.org/licenses/by/3.0/">
+ <img src="../../../_static/images/docs/license.png" alt="Creative Commons Attribution 3.0 License"/>
+</a>
+<p>
+ Except where otherwise noted, this document is licensed under
+ <a href="https://creativecommons.org/licenses/by/3.0/">Creative Commons
+ Attribution 3.0 License</a>. See all <a href="https://www.openstack.org/legal">
+ OpenStack Legal Documents</a>.
+</p>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 docs-actions-wrapper">
+            <!-- ID buglinkbottom added so that pre-filled doc bugs
+                 are sent to Launchpad projects related to the
+                 document -->
+              <a href="#" id="logABugLink2" class="docs-footer-actions"><i class="fa fa-bug"></i> found an error? report a bug</a>
+            </div>
+          </div>
+        </div>
+<div class="col-lg-3 col-md-4 col-sm-4 col-lg-pull-9 col-md-pull-8 col-sm-pull-8 docs-sidebar">
+  <div class="btn-group docs-sidebar-releases">
+    <button onclick="location.href='/'" class="btn docs-sidebar-home" data-toggle="tooltip" data-placement="top" title="OpenStack Docs Home"><i class="fa fa-arrow-circle-o-left"></i></button>
+<button href="#" type="button" data-toggle="dropdown" class="btn docs-sidebar-release-select">OpenStack Documentation<i class="fa fa-caret-down"></i></button>
+    <ul class="dropdown-menu docs-sidebar-dropdown" role="menu" aria-labelledby="dLabel">
+      <li role="presentation" class="dropdown-header">Guides</li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/index.html#install-guides">Install Guides</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/index.html#user-guides">User Guides</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/index.html#configuration-guides">Configuration Guides</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/index.html#ops-and-admin-guides">Operations and Administration Guides</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/index.html#api-guides">API Guides</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/index.html#contributor-guides">Contributor Guides</a></li>
+      <li role="presentation" class="dropdown-header">Languages</li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/de/">Deutsch (German)</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/fr/">Français (French)</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/id/">Bahasa Indonesia (Indonesian)</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/it/">Italiano (Italian)</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/ja/">日本語 (Japanese)</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/ko_KR/">한국어 (Korean)</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/pt_BR/">Português (Portuguese)</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/tr_TR/">Türkçe (Türkiye)</a></li>
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="https://docs.openstack.org/zh_CN/">简体中文 (Simplified Chinese)</a></li>
+    </ul>
+  </div>
+  <div class="docs-sidebar-toc">
+    <div class="docs-sidebar-section" id="table-of-contents">
+      <a href="../../../index.html" class="docs-sidebar-section-title"><h4>Nova Specs </h4></a>
+      <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/2023.2-priorities.html">2023.2 Bobcat Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/2023.1-priorities.html">2023.1 Antelope Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/zed-priorities.html">Zed Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/yoga-priorities.html">Yoga Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/xena-priorities.html">Xena Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/wallaby-priorities.html">Wallaby Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/victoria-priorities.html">Victoria Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/ussuri-priorities.html">Ussuri Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/train-priorities.html">Train Cycle Themes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/stein-priorities.html">Stein Project Priorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/rocky-priorities.html">Rocky Project Priorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/queens-priorities.html">Queens Project Priorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/pike-priorities.html">Pike Project Priorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/ocata-priorities.html">Ocata Project Priorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/newton-priorities.html">Newton Project Priorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/mitaka-priorities.html">Mitaka Project Priorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/liberty-priorities.html">Liberty Project Priorities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../priorities/kilo-priorities.html">Kilo Project Priorities</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../2023.2/index.html">Nova 2023.2 Bobcat Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../2023.1/index.html">Nova 2023.1 Antelope Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zed/index.html">Nova Zed Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../yoga/index.html">Nova Yoga Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../xena/index.html">Nova Xena Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../wallaby/index.html">Nova Wallaby Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../victoria/index.html">Nova Victoria Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ussuri/index.html">Nova Ussuri Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../train/index.html">Nova Train Specifications</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Nova Stein Specifications</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../implemented/alloc-candidates-in-tree.html">Filter Allocation Candidates by Provider Tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/bandwidth-resource-provider.html">Network Bandwidth resource provider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/boot-instance-specific-storage-backend.html">Boot instance specific storage backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/conf-max-attach-volumes.html">Configure maximum number of volumes to attach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/expose-virtual-device-tags-in-rest-api.html">Expose virtual device tags in REST API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/flavor-extra-spec-image-property-validation.html">Flavor Extra Spec and Image Properties Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/generic-os-vif-offloads.html">Generic os-vif datapath offloads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/handling-down-cell.html">Handling a down cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/initial-allocation-ratios.html">Default allocation ratio configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/ironic-conductor-groups.html">Use conductor groups to partition nova-compute services for Ironic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/live-migration-force-after-timeout.html">Live-Migration force after timeout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/per-aggregate-scheduling-weight.html">Per aggregate scheduling weight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/per-instance-libvirt-sysinfo-serial.html">Per-instance serial number</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/remove-force-flag-from-live-migrate-and-evacuate.html">Remove force flag from live-migrate and evacuate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/show-server-group.html">show which server group a server is in “nova show”</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/support-hpet-on-guest.html">Support High Precision Event Timer (HPET) on x86 guests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/support-to-query-nova-resources-filter-by-changes-before.html">Support to query nova resources filter by changes-before</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/vmware-live-migration.html">VMware live migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../implemented/vrouter-hw-offloads.html">vRouter Hardware Offload Enablement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="add-emulated-virtual-tpm.html">Add support for emulated virtual TPM</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">libvirt driver launching AMD SEV-encrypted instances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="count-quota-usage-from-placement.html">Count quota usage from placement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpu-model-selection.html">Select cpu model from a list of cpu models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cross-cell-resize.html">Cross-cell resize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="detach-boot-volume.html">Detach and attach boot volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enable-rebuild-for-instances-in-cell0.html">Enable Rebuild for Instances in cell0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduce-pending-vm-state.html">Introduce Pending VM state</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvirt-neutron-sriov-livemigration.html">Neutron SR-IOV Port Live Migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="local-disk-serial-numbers.html">Expose persistent serial numbers for local disks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="negative-aggregate-membership.html">Support filtering by forbidden aggregate membership</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numa-aware-live-migration.html">NUMA-aware live migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="placement-any-traits-in-allocation_candidates-query.html">Support any traits in allocation_candidates query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="placement-mixing-required-traits-with-any-traits.html">Support mixing required traits with any traits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reshape-provider-tree.html">Handling Reshaped Provider Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="show-server-numa-topology.html">Show server numa topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stein-template.html">Example Spec - The title of your blueprint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vgpu-stein.html">libvirt: Supporting multiple vGPU types for a single pGPU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volume-backed-server-rebuild.html">volume-backed server rebuild</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rocky/index.html">Nova Rocky Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../queens/index.html">Nova Queens Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pike/index.html">Nova Pike Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ocata/index.html">Nova Ocata Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../newton/index.html">Nova Newton Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mitaka/index.html">Nova Mitaka Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../liberty/index.html">Nova Liberty Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kilo/index.html">Nova Kilo Specifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../juno/index.html">Nova Juno Specifications</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../backlog/index.html">Nova Backlog Specifications</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../abandoned/index.html">Abandoned Specifications</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">How to submit a spec</a></li>
+</ul>
+
+    </div>
+
+  <div class="docs-sidebar-toc">
+    <div class="docs-sidebar-section" id="local-table-of-contents">
+      <h4 class="docs-sidebar-section-title">Page Contents</h4>
+      <ul>
+<li><a class="reference internal" href="#">libvirt driver launching AMD SEV-encrypted instances</a><ul>
+<li><a class="reference internal" href="#problem-description">Problem description</a><ul>
+<li><a class="reference internal" href="#use-cases">Use Cases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#proposed-change">Proposed change</a><ul>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+<li><a class="reference internal" href="#alternatives">Alternatives</a></li>
+<li><a class="reference internal" href="#data-model-impact">Data model impact</a></li>
+<li><a class="reference internal" href="#rest-api-impact">REST API impact</a></li>
+<li><a class="reference internal" href="#security-impact">Security impact</a></li>
+<li><a class="reference internal" href="#notifications-impact">Notifications impact</a></li>
+<li><a class="reference internal" href="#other-end-user-impact">Other end user impact</a></li>
+<li><a class="reference internal" href="#performance-impact">Performance Impact</a></li>
+<li><a class="reference internal" href="#other-deployer-impact">Other deployer impact</a></li>
+<li><a class="reference internal" href="#developer-impact">Developer impact</a></li>
+<li><a class="reference internal" href="#upgrade-impact">Upgrade impact</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li><a class="reference internal" href="#assignee-s">Assignee(s)</a></li>
+<li><a class="reference internal" href="#work-items">Work Items</a></li>
+<li><a class="reference internal" href="#future-work">Future work</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#documentation-impact">Documentation Impact</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+<li><a class="reference internal" href="#history">History</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+  </div>
+</div>
+      </div>
+    </div>
+<footer>
+  <div class="container">
+    <div class="row footer-links">
+      <div class="col-lg-2 col-sm-2">
+        <h3>OpenStack</h3>
+        <ul>
+          <li><a href="https://www.openstack.org/software/project-navigator/">Projects</a></li>
+          <li><a href="https://security.openstack.org/">OpenStack Security</a></li>
+          <li><a href="https://openstack.org/blog/">Blog</a></li>g
+          <li><a href="https://openstack.org/news/">News</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-sm-2">
+        <h3>Community</h3>
+        <ul>
+          <li><a href="https://www.meetup.com/pro/openinfradev/">User Groups</a></li>
+          <li><a href="https://openstack.org/community/events/">Events</a></li>
+          <li><a href="https://openstack.org/community/jobs/">Jobs</a></li>
+          <li><a href="https://openinfra.dev/members/">Companies</a></li>
+          <li><a href="https://docs.openstack.org/contributors">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-sm-2">
+        <h3>Documentation</h3>
+        <ul>
+          <li><a href="https://docs.openstack.org">OpenStack Manuals</a></li>
+          <li><a href="https://openstack.org/software/start/">Getting Started</a></li>
+          <li><a href="https://developer.openstack.org">API Documentation</a></li>
+          <li><a href="https://wiki.openstack.org">Wiki</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-sm-2">
+        <h3>Branding & Legal</h3>
+        <ul>
+          <li><a href="https://openinfra.dev/legal">Legal Docs</a></li>
+          <li><a href="https://openstack.org/brand/">Logos & Guidelines</a></li>
+          <li><a href="https://openinfra.dev/legal/trademark-policy">Trademark Policy</a></li>
+          <li><a href="https://openinfra.dev/privacy-policy">Privacy Policy</a></li>
+          <li><a href="https://docs.openstack.org/contributors/common/setup-gerrit.html#individual-contributor-license-agreement">OpenInfra CLA</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-sm-4">
+        <h3>Stay In Touch</h3>
+        <a href="https://twitter.com/OpenStack" target="_blank" class="social-icons footer-twitter"></a>
+        <a href="https://www.facebook.com/openinfradev" target="_blank" class="social-icons footer-facebook"></a>
+        <a href="https://www.linkedin.com/company/open-infrastructure-foundation" target="_blank" class="social-icons footer-linkedin"></a>
+        <a href="https://www.youtube.com/user/OpenStackFoundation" target="_blank" class="social-icons footer-youtube"></a>
+        <p class="fine-print">
+          The OpenStack project is provided under the
+          <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 license</a>. Docs.openstack.org is powered by
+          <a href="https://rackspace.com" target="_blank">Rackspace Cloud Computing</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- jQuery -->
+<script type="text/javascript" src="../../../_static/js/jquery-3.2.1.min.js"></script>
+
+<!-- Bootstrap JavaScript -->
+<script type="text/javascript" src="../../../_static/js/bootstrap.min.js"></script>
+
+<!-- The rest of the JS -->
+<script type="text/javascript" src="../../../_static/js/navigation.js"></script>
+
+<!-- Docs JS -->
+<script type="text/javascript" src="../../../_static/js/docs.js"></script>
+
+<!-- standard sphinx include libraries, which allow search highlighting -->
+<script type="text/javascript" src="../../../_static/underscore.js"></script>
+<script type="text/javascript" src="../../../_static/doctools.js"></script>
+<script type="text/javascript" src="../../../_static/searchtools.js"></script>
+<script type="text/javascript" src="../../../_static/language_data.js"></script>
+
+<script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+      URL_ROOT:    './',
+      VERSION:     '',
+      COLLAPSE_INDEX: false,
+      FILE_SUFFIX: '.html',
+      LINK_SUFFIX: '.html',
+      SOURCELINK_SUFFIX: '.txt',
+      HAS_SOURCE:  true
+    };
+</script>
+
+<!-- Javascript for page -->
+<script language="JavaScript">
+  /* Build a description of this page including SHA, source location on git
+   * repo, build time and the project's launchpad bug tag. Set the HREF of the
+   * bug buttons
+   */
+    var lineFeed = "%0A";
+    var gitURL = "Source: Can't derive source file URL";
+
+    /* there have been cases where "pagename" wasn't set; better check for it */
+    /* "giturl" is the URL of the source file on Git and is auto-generated by
+     * openstackdocstheme.
+     *
+     * "pagename" is a standard sphinx parameter containing the name of
+     * the source file, without extension.
+     */
+
+    var sourceFile = "specs/stein/approved/amd-sev-libvirt-support" + ".rst";
+    gitURL = "Source: https://opendev.org/openstack/nova-specs/src/doc/source" + "/" + sourceFile;
+
+    /* gitsha, project and bug_tag rely on variables in conf.py */
+    var gitSha = "SHA: f706fbd3c466742d55f96eddbc9d8f78c52cd0f5";
+    var repositoryName = "openstack/nova-specs";
+    var bugProject = "nova";
+    var bugTitle = "libvirt driver launching AMD SEV-encrypted instances in Nova Specs";
+    var fieldTags = "specs";
+    var useStoryboard = "";
+
+    /* "last_updated" is the build date and time. It relies on the
+       conf.py variable "html_last_updated_fmt", which should include
+       year/month/day as well as hours and minutes                   */
+    var buildstring = "Release:  on 2019-01-03 18:15:49";
+
+    var fieldComment = encodeURI(buildstring) +
+                       lineFeed + encodeURI(gitSha) +
+                       lineFeed + encodeURI(gitURL) ;
+
+    logABug(bugTitle, bugProject, fieldComment, fieldTags, repositoryName, useStoryboard);
+</script>
+
+
+  </body>
+</html>

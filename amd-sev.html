@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<!--[if IE 7]>    <html class="no-js oldie ie7 ie" lang="en-US" > <![endif]-->
+<!--[if IE 8]>    <html class="no-js oldie ie8 ie" lang="en-US" > <![endif]-->
+<!--[if IE 9 ]>   <html class="no-js       ie9 ie" lang="en-US" > <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="en-US" > <!--<![endif]-->
+<head>
+        <meta charset="UTF-8" >
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        
+        <title>AMD Secure Encrypted Virtualization (SEV) - AMD</title>
+            
+        <!-- devices setting -->
+        <meta name="viewport"           content="initial-scale=1,user-scalable=no,width=device-width">
+	
+        <!-- Microsoft cleartype rendering -->
+        <meta http-equiv="cleartype"    content="on">
+        <meta name="author"             content="">
+	
+        <!-- feeds, pingback -->
+        <link rel="profile"             href="http://gmpg.org/xfn/11" />
+        <link rel="alternate"           href="https://developer.amd.com/feed/" type="application/rss+xml" title="AMD RSS2 Feed" />  
+        <link rel="pingback"            href="https://developer.amd.com/xmlrpc.php" />
+                <!-- favicon -->
+        <link rel="shortcut icon"       href="https://amd.wpenginepowered.com/wordpress/media/2013/12/favicon.png" >
+                
+        <link rel="stylesheet"          href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800' >
+
+        <!-- enables HTML5 elements & feature detects -->
+        <script src="https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/modernizr-2.6.2.min.js"></script>
+
+<!-- outputs by wp_head -->
+<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+	<!-- This site is optimized with the Yoast SEO plugin v18.9 - https://yoast.com/wordpress/plugins/seo/ -->
+	<link rel="canonical" href="https://developer.amd.com/sev/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="AMD Secure Encrypted Virtualization (SEV) - AMD" />
+	<meta property="og:description" content="AMD EPYC Hardware Memory Encryption Hardware accelerated memory encryption for data-in-use protection. Takes advantage of new security components available in AMD EPYC processors AES-128 encryption engine embedded in the memory ..." />
+	<meta property="og:url" content="https://developer.amd.com/sev/" />
+	<meta property="og:site_name" content="AMD" />
+	<meta property="article:modified_time" content="2023-02-01T02:51:50+00:00" />
+	<meta name="twitter:label1" content="Est. reading time" />
+	<meta name="twitter:data1" content="4 minutes" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://developer.amd.com/#organization","name":"Advanced Micro Devices, Inc.","url":"https://developer.amd.com/","sameAs":[],"logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https://developer.amd.com/#/schema/logo/image/","url":"https://developer.amd.com/wordpress/media/2013/12/53863A_AMD_E_Blk_RGB.png","contentUrl":"https://developer.amd.com/wordpress/media/2013/12/53863A_AMD_E_Blk_RGB.png","width":821,"height":197,"caption":"Advanced Micro Devices, Inc."},"image":{"@id":"https://developer.amd.com/#/schema/logo/image/"}},{"@type":"WebSite","@id":"https://developer.amd.com/#website","url":"https://developer.amd.com/","name":"AMD","description":"Developer Central","publisher":{"@id":"https://developer.amd.com/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://developer.amd.com/?s={search_term_string}"},"query-input":"required name=search_term_string"}],"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://developer.amd.com/sev/#webpage","url":"https://developer.amd.com/sev/","name":"AMD Secure Encrypted Virtualization (SEV) - AMD","isPartOf":{"@id":"https://developer.amd.com/#website"},"datePublished":"2017-08-23T19:30:24+00:00","dateModified":"2023-02-01T02:51:50+00:00","breadcrumb":{"@id":"https://developer.amd.com/sev/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://developer.amd.com/sev/"]}]},{"@type":"BreadcrumbList","@id":"https://developer.amd.com/sev/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"AMD Secure Encrypted Virtualization (SEV)"}]}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel="alternate" type="application/rss+xml" title="AMD &raquo; Feed" href="https://developer.amd.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="AMD &raquo; Comments Feed" href="https://developer.amd.com/comments/feed/" />
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/developer.amd.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.1.1"}};
+/*! This file is auto-generated */
+!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode,e=(p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0),i.toDataURL());return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(p&&p.fillText)switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([129777,127995,8205,129778,127999],[129777,127995,8203,129778,127999])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
+</script>
+<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='wp-block-library-css' href='https://amd.wpenginepowered.com/wp-includes/css/dist/block-library/style.min.css?ver=6.1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='classic-theme-styles-css' href='https://amd.wpenginepowered.com/wp-includes/css/classic-themes.min.css?ver=1' type='text/css' media='all' />
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--duotone--dark-grayscale: url('#wp-duotone-dark-grayscale');--wp--preset--duotone--grayscale: url('#wp-duotone-grayscale');--wp--preset--duotone--purple-yellow: url('#wp-duotone-purple-yellow');--wp--preset--duotone--blue-red: url('#wp-duotone-blue-red');--wp--preset--duotone--midnight: url('#wp-duotone-midnight');--wp--preset--duotone--magenta-yellow: url('#wp-duotone-magenta-yellow');--wp--preset--duotone--purple-green: url('#wp-duotone-purple-green');--wp--preset--duotone--blue-orange: url('#wp-duotone-blue-orange');--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;}:where(.is-layout-flex){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='contact-form-7-css' href='https://amd.wpenginepowered.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=5.5.6.1' type='text/css' media='all' />
+<link rel='stylesheet' id='google-code-prettify-css-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus_amd/js/google-code-prettify/prettify.css?ver=6.1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='theme-base-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus/css/base.css?ver=3.9.0' type='text/css' media='all' />
+<link rel='stylesheet' id='theme-main-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus/css/main.css?ver=3.9.0' type='text/css' media='all' />
+<link rel='stylesheet' id='superfish-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus/css/other/superfish.css?ver=3.9.0' type='text/css' media='all' />
+<link rel='stylesheet' id='theme-resp-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus/css/responsive.css?ver=3.9.0' type='text/css' media='all' />
+<link rel='stylesheet' id='theme-fonts-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus/css/fonts.css?ver=3.9.0' type='text/css' media='all' />
+<link rel='stylesheet' id='theme-stylesheet-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus_amd/style.css?ver=3.9.0' type='text/css' media='all' />
+<link rel='stylesheet' id='prettyPhoto-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus/css/other/prettyPhoto.css?ver=3.2' type='text/css' media='all' />
+<link rel='stylesheet' id='jplayer-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus/css/other/jplayer/jplayer.css?ver=3.2' type='text/css' media='all' />
+<link rel='stylesheet' id='userdefined-css' href='https://amd.wpenginepowered.com/wp-content/themes/lotus/css/other/custom.css?ver=2.5' type='text/css' media='all' />
+<link rel='stylesheet' id='youtube-channel-gallery-css' href='https://amd.wpenginepowered.com/wp-content/plugins/youtube-channel-gallery/styles.css?ver=6.1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='jquery.magnific-popup-css' href='https://amd.wpenginepowered.com/wp-content/plugins/youtube-channel-gallery/magnific-popup.css?ver=6.1.1' type='text/css' media='all' />
+<link rel='stylesheet' id='font-awesome-css' href='https://amd.wpenginepowered.com/wp-content/plugins/popup-anything-on-click/assets/css/font-awesome.min.css?ver=2.1.6' type='text/css' media='all' />
+<link rel='stylesheet' id='popupaoc-public-style-css' href='https://amd.wpenginepowered.com/wp-content/plugins/popup-anything-on-click/assets/css/popupaoc-public.css?ver=2.1.6' type='text/css' media='all' />
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/jquery-1.9.1.min.js?ver=6.1.1' id='jquery-js'></script>
+<script type='text/javascript' id='gadwp-tracking-analytics-events-js-extra'>
+/* <![CDATA[ */
+var gadwpUAEventsData = {"options":{"event_tracking":"1","event_downloads":"zip|mp3*|mpe*g|pdf|docx*|pptx*|xlsx*|rar*|tar*","event_bouncerate":0,"aff_tracking":0,"event_affiliates":"\/out\/","hash_tracking":0,"root_domain":"amd.com","event_timeout":100,"event_precision":0,"event_formsubmit":0,"ga_pagescrolldepth_tracking":0,"ga_with_gtag":0}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/plugins/google-analytics-dashboard-for-wp/front/js/tracking-analytics-events.js?ver=5.3.10' id='gadwp-tracking-analytics-events-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus_amd/js/google-code-prettify/prettify.js?ver=6.1.1' id='google-code-prettify-js-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus_amd/js/google-code-prettify/prettify-init.js?ver=6.1.1' id='google-code-prettify-init-js-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/plugins/jquery.easing.min.js?ver=1.3' id='jquery_easing-js'></script>
+<link rel="https://api.w.org/" href="https://developer.amd.com/wp-json/" /><link rel="alternate" type="application/json" href="https://developer.amd.com/wp-json/wp/v2/pages/30322" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://developer.amd.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://developer.amd.com/wp-includes/wlwmanifest.xml" />
+<link rel='shortlink' href='https://developer.amd.com/?p=30322' />
+<link rel="alternate" type="application/json+oembed" href="https://developer.amd.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fdeveloper.amd.com%2Fsev%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://developer.amd.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fdeveloper.amd.com%2Fsev%2F&#038;format=xml" />
+
+<!-- BEGIN ExactMetrics v5.3.10 Universal Analytics - https://exactmetrics.com/ -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-88618622-2', 'auto');
+  ga('send', 'pageview');
+</script>
+<!-- END ExactMetrics Universal Analytics -->
+<!-- end wp_head -->
+
+<!--[if IE 7]>
+    <link rel="stylesheet"      href="https://amd.wpenginepowered.com/wp-content/themes/lotus/css/ie7.css?ver=3.0" type="text/css" media="screen"/>
+<![endif]-->
+
+ 
+
+<!-- custom styles for plugins -->
+<link rel="stylesheet"  href="https://amd.wpenginepowered.com/wp-content/themes/lotus/css/other/overwrite.css?ver=1.5" type="text/css" media="screen"/>
+
+ 
+    
+<!-- Media query for old IE
+[if lt IE 9]><script src="https://amd.wpenginepowered.com/wp-content/themes/lotus_amd/js/libs/modules/css3-mediaqueries.js"></script><![endif]-->
+
+
+</head>
+
+
+
+<body class="page-template-default page page-id-30322" >
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+<div id="inner-body">
+    
+        <div id="top-header">
+        <div class="container fold">
+            
+            
+            <div class="logo_inner">
+                <a href="https://developer.amd.com/" title="AMD" rel="home">
+                                            <img src="https://amd.wpenginepowered.com/wordpress/media/2013/12/logo.png" data-image2x="https://developer.amd.com/wordpress/media/2013/12/logo@2x.png"  alt="AMD" />
+                                    </a>
+                <section>
+                    <h4 class="site-title"><a href="https://developer.amd.com/" title="AMD" rel="home">Developer Central</a></h4>
+                    <!--<p class="site-description"></p>-->
+                </section>
+
+                <div id="logo" >
+
+                    <div class="nav-toggle"><a class="icon-reorder" href="#"></a></div>
+                </div><!-- end logo fold -->
+            </div><!-- end logo inner -->
+
+                        <div class="header-tools">
+
+                                <div id="searchform">
+                    <form action="https://developer.amd.com/" method="get">
+                        <input type="text" id="s" placeholder="SEARCH" name="s" />
+                    </form>
+                </div><!-- end searchform -->
+                
+                <div class="header-links"><a href="http://hc.csdn.net/" target="_blank">China</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;<a href="http://www.amd.com" target="_blank">AMD.com</a></div>
+
+                
+                
+            </div><!-- end header tools -->
+                        
+        </div><!-- end container -->
+    </div><!-- end top header -->
+        
+    
+    <header id="siteheader" role="banner" class="wrapper">
+        <div class="container">
+
+
+<!-- start navigation -->
+<nav id="access" class="menu-main-container"><ul id="menu-main" class="sf-menu"><li id="menu-item-16" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-16"><a href="https://developer.amd.com/">Home</a></li>
+<li id="menu-item-19" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-19"><a href="https://developer.amd.com/tools-and-sdks/">Tools &amp; SDKs</a></li>
+<li id="menu-item-84" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-84"><a href="https://developer.amd.com/resources/">Resources</a>
+<ul class="sub-menu">
+	<li id="menu-item--8" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item--8"><a href="https://developer.amd.com/resources/epyc-resources/">EPYC&#x2122; Resources</a>
+	<ul class="sub-menu">
+		<li id="menu-item--9" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--9"><a href="https://developer.amd.com/resources/epyc-resources/epyc-tuning-guides/">Performance Tuning Guides</a></li>
+		<li id="menu-item--10" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--10"><a href="https://developer.amd.com/resources/epyc-resources/epyc-reference-architectures/">Reference Architectures</a></li>
+		<li id="menu-item--11" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--11"><a href="https://developer.amd.com/resources/epyc-resources/solution-briefs-and-white-papers/">Solution Briefs and White Papers</a></li>
+		<li id="menu-item--12" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--12"><a href="https://developer.amd.com/resources/epyc-resources/epyc-specifications/">Specs and Manuals</a></li>
+	</ul>
+</li>
+	<li id="menu-item--13" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item--13"><a href="https://developer.amd.com/resources/speculative-execution/">Product Security Resources</a>
+	<ul class="sub-menu">
+		<li id="menu-item--14" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--14"><a href="https://developer.amd.com/resources/speculative-execution/developer-resources/">Developer Resources</a></li>
+		<li id="menu-item--15" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--15"><a href="https://developer.amd.com/resources/speculative-execution/operating-system-provider-updates/">Operating System Provider Updates</a></li>
+		<li id="menu-item--16" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--16"><a href="https://developer.amd.com/resources/speculative-execution/third-party-information-sound-security-practices/">Third-Party Information on Sound Security Practices</a></li>
+	</ul>
+</li>
+	<li id="menu-item--17" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item--17"><a href="https://developer.amd.com/resources/rocm-learning-center/">ROCm&#x2122; Learning Center</a>
+	<ul class="sub-menu">
+		<li id="menu-item--18" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--18"><a href="https://developer.amd.com/resources/rocm-learning-center/deep-learning/">Deep Learning</a></li>
+		<li id="menu-item--19" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--19"><a href="https://developer.amd.com/resources/rocm-learning-center/fundamentals-of-hip-programming/">Fundamentals of HIP Programming</a></li>
+		<li id="menu-item--20" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--20"><a href="https://developer.amd.com/resources/rocm-learning-center/multi-gpu-programming/">Multi-GPU Programming</a></li>
+		<li id="menu-item--21" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--21"><a href="https://developer.amd.com/resources/rocm-learning-center/real-world-applications/">Real World Applications</a></li>
+	</ul>
+</li>
+	<li id="menu-item--22" class="menu-item menu-item-type-post_type menu-item-object-page menu-item--22"><a href="https://developer.amd.com/resources/developer-guides-manuals/">Developer Guides, Manuals &amp; ISA Documents</a></li>
+</ul>
+</li>
+<li id="menu-item-30506" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-30506"><a href="https://community.amd.com">Community</a>
+<ul class="sub-menu">
+	<li id="menu-item-30578" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30578"><a href="https://community.amd.com/community/server-gurus">AMD Server Gurus</a></li>
+</ul>
+</li>
+<li id="menu-item-30518" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-30518"><a href="https://developer.amd.com/ecosystem/">Ecosystem</a>
+<ul class="sub-menu">
+	<li id="menu-item-30519" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30519"><a href="https://www.amd.com/en/partner">Partners</a></li>
+</ul>
+</li>
+</ul></nav><!-- end navigation -->
+
+
+        </div><!-- end of container -->
+    </header><!-- end header -->
+
+                <header id="page-title-section">
+
+                <div class="breadcrumbs">
+                    <div>
+                        <div class="container fold">
+
+                            
+                            
+                            <p id="axi_breadcrumbs"><a rel="nofollow" href="https://developer.amd.com/">Home</a> &gt; <strong>AMD Secure Encrypted Virtualization (SEV)</strong></p>                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="page-header container ">
+
+                    <div class="container fold">
+
+                        <section>
+                            <h1 class="page-title" itemprop="headline">AMD Secure Encrypted Virtualization (SEV)</h1>
+                                                    </section>
+                    </div>
+
+                </div>
+                <!-- end page header -->
+
+            </header> <!-- end page header -->
+        
+    <div id="top-slider">
+        </div>
+
+    
+
+    <div id="main" class="no-sidebar">
+        <div class="wrapper fold clearfix">
+            
+            <section id="primary" >
+                <div class="content" role="main"  >
+                    
+                            
+                                    
+                
+                    <div class="container block">
+                        
+                                                
+                                                
+                        <article id="post-30322" class="clearfix post-30322 page type-page status-publish hentry" role="article" >
+                            
+                            <section class="post_content clearfix" itemprop="articleBody">
+                                
+                                <h2>AMD EPYC Hardware Memory Encryption</h2>
+<p>Hardware accelerated memory encryption for data-in-use protection. Takes advantage of new security components available in AMD EPYC processors</p>
+<ol>
+<li><b>AES-128 encryption engine</b> embedded in the memory controller. Automatically encrypts and decrypts data in main memory when an appropriate key is provided.</li>
+<li><b>AMD Secure Processor</b>. Provides cryptographic functionality for secure key generation and key management.</li>
+</ol>
+<h2>Feature Overview</h2>
+<div class="text_block">
+<p><b>AMD Secure Memory Encryption (SME)</b></p>
+<p>Uses a single key to encrypt system memory. The key is generated by the AMD Secure Processor at boot. SME requires enablement in the system BIOS or operating system. When enabled in the BIOS, memory encryption is transparent and can be run with any operating system.</p>
+<p><b>AMD Secure Encrypted Virtualization (SEV)</b></p>
+<p>Uses one key per virtual machine to isolate guests and the hypervisor from one another. The keys are managed by the AMD Secure Processor. SEV requires enablement in the guest operating system and hypervisor. The guest changes allow the VM to indicate which pages in memory should be encrypted. The hypervisor changes use hardware virtualization instructions and communication with the AMD Secure processor to manage the appropriate keys in the memory controller.</p>
+<p><b>AMD Secure Encrypted Virtualization-Encrypted State (SEV-ES)</b></p>
+<p>Encrypts all CPU register contents when a VM stops running. This prevents the leakage of information in CPU registers to components like the hypervisor, and can even detect malicious modifications to a CPU register state.</p>
+</div>
+<div class="news text_block">
+<p>&nbsp;</p>
+</div>
+<h2>Product Briefs</h2>
+<div class="text_block">
+<table class="wrap_2">
+<tbody>
+<tr>
+<th style="text-align: center">Document</th>
+<th style="text-align: center">Date</th>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/HelpingSecuretheCloudwithAMDEPYCSEV.pdf">Helping Secure the Cloud with AMD EPYC Secure Encrypted Virtualization</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;text-align: center;border-bottom: 1pt solid #ebebeb">April 2019</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://www.amd.com/system/files/documents/trusted-cloud-winmagic-amd-epyc-hardware-memory-encryption.pdf">Solving the Cloud Trust Problem with WinMagic and AMD EPYC Hardware Memory Encryption</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;text-align: center;border-bottom: 1pt solid #ebebeb">October 2018</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%"><a href="https://www.amd.com/system/files/documents/cloud-security-epyc-hardware-memory-encryption.pdf">Enhance your Cloud Security with AMD EPYC Hardware Memory Encryption</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;text-align: center">October 2018</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>White Papers &amp; Specifications</h2>
+<table style="border-collapse: collapse">
+<tbody>
+<tr>
+<th style="padding: 5px;text-align: center">Document</th>
+<th style="padding: 5px;text-align: center">Description</th>
+<th style="padding: 5px;text-align: center">Revision</th>
+<th style="padding: 5px;text-align: center">Date</th>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://www.amd.com/system/files/TechDocs/56860.pdf">SEV Secure Nested Paging<br />
+Firmware ABI Specification</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Documents the API available to the host hypervisor for management of SNP-active guests.</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">1.54</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">November<br />
+2022</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://www.amd.com/system/files/TechDocs/55766_SEV-KM_API_Specification.pdf">Secure Encrypted Virtualization API</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Documents the API available to the host hypervisor for management of keys and secure data transfer between host hypervisor and guest VM memory</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">0.24</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">April<br />
+2020</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://www.amd.com/system/files/TechDocs/24593.pdf">AMD64 Architecture Programmer’s Manual Volume 2</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Describes the AMD64 architecture&#8217;s resources and functions that are managed by system software. Note sections</p>
+<ul>
+<li style="line-height: 100%">15.34. Secure Encrypted Virtualization and</li>
+<li style="line-height: 100%">15.35. Encrypted State (SEV-ES)</li>
+<li style="line-height: 100%">15.36. Nested Paging</li>
+</ul>
+</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">3.33</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">April<br />
+2020</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/56421.pdf">Guest Hypervisor Communication Block (GHCB) Standardization</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Standardizes the Guest-Hypervisor Communication Block (GHCB) format and specifies the required exit support and associated guest state to be provided in the GHCB to allow interoperability between hypervisors and SEV-ES guests.</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">2.02</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">January<br />
+2023</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/58019.pdf">SVSM Draft Specification</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Secure VM Service Module (SVSM) for SEV-SNP Guests</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">0.50</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">August<br />
+2022</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://www.amd.com/system/files/TechDocs/SEV-SNP-strengthening-vm-isolation-with-integrity-protection-and-more.pdf">AMD SEV-SNP</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Strengthening VM isolation with integrity protection and more.</td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"></td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">January<br />
+2020</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://specs.openstack.org/openstack/nova-specs/specs/stein/approved/amd-sev-libvirt-support.html">OpenStack: libvirt driver launching AMD SEV-encrypted instances</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Proposes work required in order for nova’s libvirt driver to support launching of KVM instances which are encrypted using AMD&#8217;s SEV (Secure Encrypted Virtualization) technology.</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb"></td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">January<br />
+2019</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://www.amd.com/system/files/TechDocs/Protecting%20VM%20Register%20State%20with%20SEV-ES.pdf">Protecting VM Register State With SEV-ES</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Technical overview of the SEV-ES feature, the principles behind the architecture, and protections offered to further isolate encrypted VMs.</td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"></td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">February<br />
+2017</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://amd.wpenginepowered.com/wordpress/media/2013/12/AMD_Memory_Encryption_Whitepaper_v9-Public.pdf">AMD Memory Encryption</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Introduction to Secure Memory Encryption (SME) and Secure Encrypted Virtualization (SEV).</td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;text-align: center;border-bottom: 1pt solid #ebebeb">9</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">October<br />
+2021</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://www.amd.com/system/files/TechDocs/57230.pdf">Versioned Chip Endorsement Key (VCEK) Certificate and KDS Interface Specification</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Introduction to the VCEK certificate and the KDS interface used to retrieve the certificate.</td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;text-align: center;border-bottom: 1pt solid #ebebeb">0.51</td>
+<td style="padding: 10px;vertical-align: middle;text-align: center;line-height: 150%;border-bottom: 1pt solid #ebebeb">January<br />
+2023</td>
+</tr>
+</tbody>
+</table>
+<h2>Links &amp; Downloads</h2>
+<div class="text_block">
+<table class="wrap_2">
+<tbody>
+<tr>
+<th style="text-align: center">Link</th>
+<th style="text-align: center">Description</th>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://github.com/AMDESE/AMDSEV">https://github.com/AMDESE/AMDSEV</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Setup scripts useful for running SEV guests. Site also hosts Linux open source code under development (note SEV support has been accepted in upstream projects)</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://blogs.oracle.com/linux/using-amd-secure-memory-encryption-with-oracle-linux">Using AMD Secure Memory Encryption with Oracle Linux</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Oracle UEK support for SME and SEV.</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="//www.suse.com/documentation/sles-15/singlehtml/art.amd-sev/art.amd-sev.html#sec.amd-sev.intro">SUSE: AMD Secure Encrypted Virtualization (AMD-SEV) Guide</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Provides a basic understanding of how SEV works, how to enable and configure it, and some of the limitations and restrictions that its use causes as compared to non-encrypted virtualization.</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/ask_ark_naples.cert">ask_ark_naples.cert</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">ASK/ARK certificates for EPYC 7xx1 (Naples)</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/ask_ark_rome.cert">ask_ark_rome.cert</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">ASK/ARK certificates for EPYC 7xx2 (Rome)</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/ask_ark_milan.cert">ask_ark_milan.cert</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">ASK/ARK certificates for EPYC 7xx3 (Milan)</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/ask_ark_genoa.cert">ask_ark_genoa.cert</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">ASK/ARK certificates for EPYC 9xx4 (Genoa)</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/amd_sev_fam17h_model01h_0.17.48.zip">amd_sev_fam17h_model01h_0.17.48.zip</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">SEV Firmware | SEV firmware 0.17.48 [hex 00.11.30] for EPYC 7xx1 (Naples)</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/amd_sev_fam17h_model3xh_0.24.15.zip">amd_sev_fam17h_model3xh_0.24.15.zip</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">SEV Firmware | SEV firmware 0.24.15 [hex 00.18.0F] for EPYC 7xx2 (Rome)</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/amd_sev_fam19h_model0xh_1.54.01.zip">amd_sev_fam19h_model0xh_1.54.01.zip</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">SEV Firmware | SEV firmware 1.54.01 [hex 1.36.01] for EPYC 7xx3 (Milan)</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://kdsintf.amd.com/cek/">CEK certificate web page</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">Interactive tool for obtaining CEK certificate. Also available as https://kdsintf.amd.com/cek/id/&lt;GetIDValue&gt;</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb"><a href="https://github.com/AMDESE/sev-tool">https://github.com/AMDESE/sev-tool</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%;border-bottom: 1pt solid #ebebeb">AMD SEV Tool for managing SEV platform certificates</td>
+</tr>
+<tr>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%"><a href="https://github.com/AMDESE/runtime">https://github.com/AMDESE/runtime</a></td>
+<td style="padding: 10px;vertical-align: middle;line-height: 150%">SEV runtime for Kata Containers</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2>Technical Presentations</h2>
+<div class="text_block">
+<table class="wrap_2">
+<tbody>
+<tr>
+<th style="text-align: center">Forum</th>
+<th style="text-align: center">Presentation</th>
+<th style="text-align: center">Date</th>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://developer.amd.com/wp-content/resources/LSS-SNP_Attestation-r4.pdf">Linux Security Summit (2022)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">AMD SEV-SNP Attestation: Establishing Trust in Guests</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">September 2022</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://www.youtube.com/watch?v=yr56SaJ_0QI&amp;feature=youtu.be">Linux Security Summit (2019)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">Upcoming x86 Technologies for Malicious Hypervisor Protection</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">November 2019</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://www.youtube.com/watch?v=rh02gJyKxDo">KVM Forum (2019)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">Secure Encrypted Virtualization – What’s Next?</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">November 2019</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://www.youtube.com/watch?reload=9&amp;v=0-ISmJNxGiY">Linux Security Summit (2019)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">Enarx &#8211; Attested, Secured Execution with AMD’s SEV</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">August 2019</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://www.youtube.com/watch?v=BnA6holGJ08">Linux Security Summit (2018)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">AMD Encrypted Virtualization Update</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">November 2018</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://events.linuxfoundation.org/wp-content/uploads/2017/12/Extending-Secure-Encrypted-Virtualization-with-SEV-ES-Thomas-Lendacky-AMD.pdf">KVM Forum (2018)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">Extending Secure Encrypted Virtualization with SEV-ES</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">October 2018</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://events17.linuxfoundation.org/sites/events/files/slides/AMD SEV-ES.pdf">Linux Security Summit (2017)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">Protecting VM Register State with AMD SEV-ES</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">September 2017</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://www.youtube.com/watch?v=kIQByfvsDa0">Linux Security Summit (2016)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">AMD x86 Memory Encryption Technologies</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">December 2016</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://www.youtube.com/watch?v=RcvQ1xN55Ew">KVM Forum (2016)</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">AMD’s Virtualization Memory Encryption Technology</td>
+<td style="padding: 10px;text-align: center;border-bottom: 1pt solid #ebebeb">September 2016</td>
+</tr>
+<tr>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb"><a href="https://www.youtube.com/watch?v=yPr7zYTXA7I">Xen Summit</a></td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb">AMD&#8217;s Virtualization Memory Encryption Technology</td>
+<td style="padding: 10px;border-bottom: 1pt solid #ebebeb;text-align: center">September 2016</td>
+</tr>
+<tr>
+<td style="padding: 10px"><a href="https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/kaplan">Usenix Security Symposium</a></td>
+<td style="padding: 10px">AMD x86 Memory Encryption Technologies</td>
+<td style="padding: 10px;text-align: center">August 2016</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="text_block"></div>
+                                
+                            </section> <!-- end article section -->
+                            
+                            <div class="clear"></div>
+                            
+                            <footer>
+                                                            </footer> <!-- end article footer -->
+                        
+                        </article> <!-- end article -->
+                        
+                        
+                              
+                        
+                        <div class="clear"></div>
+                        
+                                                
+                        
+                        <div class="entry-builder-wrapper">
+                            <div class="entry-builder container">
+                                <div class="entry-builder-frame">
+                                    
+                                                                        
+                                </div>
+                            </div><!-- axiom-builder container -->
+                        </div><!-- axiom-builder wrapper -->
+                        
+                        <div class="clear"></div>
+                        
+                        
+                    </div>
+
+                                            
+                    
+                </div><!-- end content -->
+            </section><!-- end primary -->
+            
+            
+            
+
+
+            
+        </div>
+    </div><!-- end main -->
+
+
+
+    <!--<div class="container fold subfooter-bar"> </div>-->
+
+    <aside class="wrapper subfooter">
+        
+        <div class="container fold">
+            
+            <div class="grid_wrapper">
+                
+                <section class="widget-area one_third">       
+                    <section id="text-7" class="widget-container widget_text">			<div class="textwidget">&nbsp;</div>
+		</section>                </section>
+
+                <ul id="footer-links">
+                    <li><a href="http://www.amd.com/en-us/who-we-are/careers" target="_blank">Careers</a></li>
+                    <li>/</li>
+                    <li><a href="/site-map/">Site Map</a></li>
+                    <li>/</li>
+                    <li><a href="http://www.amd.com/en-us/who-we-are/copyright" target="_blank">Terms and Conditions</a></li>
+                    <li>/</li>
+                    <li><a href="http://www.amd.com/en-us/who-we-are/privacy" target="_blank">Privacy</a></li>
+                    <li>/</li>
+                    <li><a href="http://www.amd.com/en-us/who-we-are/cookies" target="_blank">Cookie Policy</a></li>
+                    <li>/</li>
+                    <li><a href="/help/">Help</a></li>
+                    <li>/</li>
+                    <li class="last"><a href="http://www.amd.com/en-us/who-we-are/trademarks" target="_blank">Trademarks</a></li>
+                </ul>
+            </div>
+            
+        </div><!-- end of container -->
+    </aside><!-- end footer widget -->
+
+		
+    <footer id="sitefooter" class="wrapper" role="contentinfo" >
+        <div class="container fold">
+            
+            <ul class="socials"><li ><a class="facebook" href="https://www.facebook.com/amd" target="_blank" ></a></li><li ><a class="twitter" href="https://twitter.com/AMDDevCentral" target="_blank" ></a></li><li ><a class="gplus" href="https://plus.google.com/+AMD/posts" target="_blank" ></a></li><li ><a class="youtube" href="https://www.youtube.com/user/AMDDevCentral" target="_blank" ></a></li><li ><a class="linkedin" href="https://www.linkedin.com/company/amd" target="_blank" ></a></li><li ><a class="pinterest" href="https://www.pinterest.com/amd/" target="_blank" ></a></li><li ><a class="rss" href="https://developer.amd.com/feed/" target="_blank" ></a></li></ul><!-- end socials -->            
+            <div id="copyright">
+                                <small>©2023 Advanced Micro Devices, Inc. OpenCL™ and the OpenCL™ logo are trademarks of Apple, Inc., used with permission by Khronos.</small>
+                            </div>
+            
+                        <!-- end navigation -->
+            
+            
+        </div><!-- end of container -->
+    </footer><!-- end sitefooter -->
+    
+    <div class="scroll2top"></div>
+
+    <script>
+            </script><!-- user custom js -->
+    
+    <!--[if (lte IE 8)]>
+    <script src="https://amd.wpenginepowered.com/wp-content/themes/lotus_amd/js/libs/polyfills/selectivizr-min.js"></script>
+    <![endif]-->
+     
+    <!-- outputs by wp_footer -->
+    <script type='text/javascript' src='https://amd.wpenginepowered.com/wp-includes/js/comment-reply.min.js?ver=6.1.1' id='comment-reply-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/plugins/popup-anything-on-click/assets/js/popupaoc-public.js?ver=2.1.6' id='popupaoc-public-js-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-includes/js/dist/vendor/regenerator-runtime.min.js?ver=0.13.9' id='regenerator-runtime-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=3.15.0' id='wp-polyfill-js'></script>
+<script type='text/javascript' id='contact-form-7-js-extra'>
+/* <![CDATA[ */
+var wpcf7 = {"api":{"root":"https:\/\/developer.amd.com\/wp-json\/","namespace":"contact-form-7\/v1"},"cached":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/plugins/contact-form-7/includes/js/index.js?ver=5.5.6.1' id='contact-form-7-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/plugins.js?ver=1.6' id='axi_essentials-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/hoverIntent.js?ver=r7' id='hoverIntent-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/superfish.js?ver=1.7.2' id='superfish-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/plugins/jquery.prettyPhoto.js?ver=3.1.5' id='prettyPhoto-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/plugins/jquery.fitvids.js?ver=1.0' id='fitvids-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/plugins/jquery.isotope.min.js?ver=1.5.25' id='isotope-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/plugins/jquery.touchSwipe.min.js?ver=1.3.3' id='touchswipe-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/plugins/jquery.mousewheel.min.js?ver=3.0.6' id='mousewheel-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/libs/plugins/jquery.carouFredSel-6.1.0-packed.js?ver=6.1.0' id='caroufredsel-js'></script>
+<script type='text/javascript' src='https://amd.wpenginepowered.com/wp-content/themes/lotus/js/script.js?ver=1.8' id='axi.src-js'></script>
+    <!-- end wp_footer -->
+
+
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-35904567-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+</script>
+
+<!-- SiteCatalyst BOF -->
+<script language="JavaScript" type="text/javascript" src="https://www.amd.com/us/as/sp2013/custom.js"></script>
+<script language="JavaScript" type="text/javascript" src="https://www.amd.com/us/as/sp2013/scode_global.js"></script>
+<script language="JavaScript" type="text/javascript"><!--
+    var s_code=s.t();if(s_code)document.write(s_code)//--></script>
+<!-- SiteCatalyst EOF -->
+
+    <script src="https://amd.wpenginepowered.com/wp-content/themes/lotus_amd/js/scripts.js"></script>
+    
+</div><!--! end of #inner-body -->
+</body>
+</html>
